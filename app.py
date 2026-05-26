@@ -27,7 +27,7 @@ def load_labels():
     with open("label_mapping.pkl", "rb") as f:
         return pickle.load(f)
     
-    
+
 import os
 import gdown
 
@@ -176,7 +176,6 @@ st.write("""
 """)
 
 st.markdown("---")
-
 # ==================================================
 # SECTION 3 — IMAGE UPLOAD
 # ==================================================
@@ -187,20 +186,24 @@ uploaded_file = st.file_uploader(
     type=["jpg", "jpeg", "png"]
 )
 
+# Stop app until image is uploaded
+if uploaded_file is None:
+    st.info("Please upload a road image to begin prediction.")
+    st.stop()
+
 # ==================================================
 # SECTION 4 — IMAGE PREVIEW
 # ==================================================
-if uploaded_file is not None:
+image = Image.open(uploaded_file)
 
-    image = Image.open(uploaded_file)
+st.header("🖼 Uploaded Image")
 
-    st.header("🖼 Uploaded Image")
+st.image(
+    image,
+    caption="Road Surface Image",
+    use_container_width=True
+)
 
-    st.image(
-        image,
-        caption="Road Surface Image",
-        use_container_width=True
-    )
 # ==================================================
 # SECTION 5 — PREDICTION AREA
 # ==================================================
@@ -232,19 +235,6 @@ with col3:
         label="Severity",
         value=severity
     )
-
-# Risk Indicator
-
-if severity == "High":
-    st.error("🚨 High-Risk Road Condition Detected")
-
-elif severity == "Medium":
-    st.warning("⚠ Moderate Road Damage Detected")
-
-else:
-    st.success("✅ Low-Risk Infrastructure Condition")
-
-
 # ==================================================
 # SECTION 6 — VISUALIZATION AREA
 # ==================================================
